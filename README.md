@@ -2,17 +2,31 @@
 
 This repo contains code for the "TensorFlow for poets 2" series of codelabs.
 
-
 This repo contains simplified and trimmed down version of tensorflow's example image classification apps.
 
 The `scripts` directory contains helpers for the codelab. Some of these come from the main TensorFlow repository, and are included here so you can use them without also downloading the main TensorFlow repo (they are not part of the TensorFlow `pip` installation).
 
-## Instructions for Windows
+# Requirements
 
-- Add a folder named "tf_files". Add a folder for each category and put the imges in the corresponding folder.
+## Install TensorFlow
+
+> pip install --upgrade "tensorflow==1.7.*"
+
+# Clone the Repo
+
+
+# 3. See the training images
+
+- Go to tf_files/tactile_photos. There will be a folder with each category of the training model.
+
+# Instructions for Windows
+
+## Start tensorboard
 - run one cmd with
 "tensorboard --logdir tf_files/training_summaries --host=127.0.0.1"
  for logging.
+
+##Configure Mobilenet
 
 - Then run another cmd with this commands:
 
