@@ -21,7 +21,7 @@ echo $out
 
 tensorflowjs_converter \
     --input_format=tf_saved_model \
-    --output_node_names=$out \
+    --output_node_names=final_result \
     --saved_model_tags=serve \
     /tf_files/saved_models/$1 \
     /tf_files/web_model/$1

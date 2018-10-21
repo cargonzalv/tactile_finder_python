@@ -9,5 +9,5 @@ WORKDIR /tensorflow
 RUN git pull
 
 ADD src .
-ADD scripts /tensorflow/examples/image_retraining
+ADD scripts examples/image_retraining
 CMD cd /tensorflow
