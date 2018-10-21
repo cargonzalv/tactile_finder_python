@@ -3,4 +3,5 @@ rm -rfv ./tf_files/training_summaries/$1
 SCRIPT=`realpath $0`
 SCRIPTPATH=`dirname $SCRIPT`
 docker run -v $SCRIPTPATH/tf_files:/tf_files -i -t cegonzalv/tactilefindertensorflow:latest bash -c "./train.sh $1 $2"
+cp -r ./tf_files/web_model/$1/  ../tactileFinderClient/src/tfmodel
 cmd /k

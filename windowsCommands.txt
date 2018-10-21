@@ -43,8 +43,11 @@ saved_model_cli show --dir tf_files/saved_models/mobilenet_0.50_224 --all
 //convert
 tensorflowjs_converter --input_format=tf_saved_model --output_node_names=final_result:0 --saved_model_tags=serve tf_files/saved_models/mobilenet_0.50_224 tf_files/web_model/mobilenet_0.50_224
 
-docker build ./ -t cegonzalv/tactilefindertensorflow:latest
+docker build ./ --rm -t  cegonzalv/tactilefindertensorflow:latest
 docker push cegonzalv/tactilefindertensorflow:latest
+
+//fix bash files
+sed -e "s/^M//" filename > newfilename
 
 //small, for testing
 train.sh mobilenet_0.5_224 50

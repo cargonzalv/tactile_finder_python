@@ -354,6 +354,9 @@ def create_bottleneck_file(bottleneck_path, image_lists, label_name, index,
         sess, image_data, jpeg_data_tensor, decoded_image_tensor,
         resized_input_tensor, bottleneck_tensor)
   except Exception as e:
+    tensor_name_list = [tensor.name for tensor in tf.get_default_graph().as_graph_def().node]
+    for tensor_name in tensor_name_list:
+      print(tensor_name, '\n')
     raise RuntimeError('Error during processing file %s (%s)' % (image_path,
                                                                  str(e)))
   bottleneck_string = ','.join(str(x) for x in bottleneck_values)
@@ -657,7 +660,7 @@ def add_input_distortions(flip_left_right, random_crop, random_scale,
   precrop_shape_as_int = tf.cast(precrop_shape, dtype=tf.int32)
   precropped_image = tf.image.resize_bilinear(decoded_image_4d,
                                               precrop_shape_as_int)
-  precropped_image_3d = tf.squeeze(precropped_image, squeeze_dims=[0])
+  precropped_image_3d = tf.squeeze(precropped_image, axis=[0])
   cropped_image = tf.random_crop(precropped_image_3d,
                                  [input_height, input_width, input_depth])
   if flip_left_right:
@@ -802,8 +805,8 @@ def run_final_eval(sess, model_info, class_count, image_lists, jpeg_data_tensor,
     resized_image_tensor: The input node of the recognition graph.
     bottleneck_tensor: The bottleneck output layer of the CNN graph.
   """
-  (sess, bottleneck_input, ground_truth_input, evaluation_step,
-   prediction) = build_eval_session(model_info, class_count)
+  (eval_sess, bottleneck_input, ground_truth_input,
+   evaluation_step, prediction) = build_eval_session(model_info, class_count)
 
   test_bottlenecks, test_ground_truth, test_filenames = (
       get_random_cached_bottlenecks(sess, image_lists, FLAGS.test_batch_size,
@@ -811,12 +814,11 @@ def run_final_eval(sess, model_info, class_count, image_lists, jpeg_data_tensor,
                                     FLAGS.image_dir, jpeg_data_tensor,
                                     decoded_image_tensor, resized_image_tensor,
                                     bottleneck_tensor, FLAGS.architecture))
-  test_accuracy, predictions = sess.run(
-      [evaluation_step, prediction],
-      feed_dict={
-          bottleneck_input: test_bottlenecks,
-          ground_truth_input: test_ground_truth
-      })
+  test_accuracy, predictions = eval_sess.run( 
+    [evaluation_step, prediction], 
+    feed_dict={ 
+      bottleneck_input: test_bottlenecks, ground_truth_input: test_ground_truth 
+    })
   tf.logging.info('Final test accuracy = %.1f%% (N=%d)' %
                   (test_accuracy * 100, len(test_bottlenecks)))
 
@@ -1308,7 +1310,7 @@ if __name__ == '__main__':
   parser.add_argument(
       '--validation_batch_size',
       type=int,
-      default=-1,
+      default=100,
       help="""\
       How many images to use in an evaluation batch. This validation set is
       used much more often than the test set, and is an early indicator of how
@@ -1352,7 +1354,7 @@ if __name__ == '__main__':
   )
   parser.add_argument(
       '--flip_left_right',
-      default=True,
+      default=False,
       help="""\
       Whether to randomly flip half of the training images horizontally.\
       """,
@@ -1361,7 +1363,7 @@ if __name__ == '__main__':
   parser.add_argument(
       '--random_crop',
       type=int,
-      default=5,
+      default=0,
       help="""\
       A percentage determining how much of a margin to randomly crop off the
       training images.\
@@ -1370,7 +1372,7 @@ if __name__ == '__main__':
   parser.add_argument(
       '--random_scale',
       type=int,
-      default=5,
+      default=0,
       help="""\
       A percentage determining how much to randomly scale up the size of the
       training images by.\
@@ -1379,10 +1381,21 @@ if __name__ == '__main__':
   parser.add_argument(
       '--random_brightness',
       type=int,
-      default=5,
+      default=0,
       help="""\
       A percentage determining how much to randomly multiply the training image
       input pixels up or down by.\
+      """
+  )
+  parser.add_argument(
+      '--tfhub_module',
+      type=str,
+      default=(
+          'https://tfhub.dev/google/imagenet/inception_v3/feature_vector/1'),
+      help="""\
+      Which TensorFlow Hub module to use.
+      See https://github.com/tensorflow/hub/blob/r0.1/docs/modules/image.md
+      for some publicly available ones.\
       """
   )
   parser.add_argument(
@@ -1403,7 +1416,7 @@ if __name__ == '__main__':
   parser.add_argument(
       '--saved_model_dir',
       type=str,
-      default='/tmp/saved_models/1/',
+      default='',
       help='Where to save the exported graph.')
   FLAGS, unparsed = parser.parse_known_args()
   tf.app.run(main=main, argv=[sys.argv[0]] + unparsed)

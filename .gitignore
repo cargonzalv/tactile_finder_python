@@ -104,7 +104,6 @@ venv.bak/
 .mypy_cache/
 
 # project specific
-/tf_files/*
-!/tf_files/tactile_photos/
 /docker_container/tf_files/*
-!/docker_container/tf_files/tactile_photos/
+/docker_container/tf_files/*/*
+!/docker_container/tf_files/tactile_photos/*
