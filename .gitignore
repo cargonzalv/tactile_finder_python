@@ -102,3 +102,7 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# project specific
+/tf_files
+!/tf_files/tactile_photos
