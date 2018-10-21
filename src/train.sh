@@ -10,9 +10,18 @@ python ./examples/image_retraining/retrain.py \
 --saved_model_dir=/tf_files/saved_models/$1 \
 --architecture=$1
 
+echo $1
+out=""
+if [[ $1 == mobile* ]] ; then
+    out="MobilenetV1/Predictions/Reshape_1"
+else 
+    out="pool_3/_reshape"
+fi 
+echo $out
+
 tensorflowjs_converter \
     --input_format=tf_saved_model \
-    --output_node_names=InceptionV3/Predictions/Reshape_1 \
+    --output_node_names=$out \
     --saved_model_tags=serve \
     /tf_files/saved_models/$1 \
     /tf_files/web_model/$1
