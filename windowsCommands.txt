@@ -59,3 +59,11 @@ train.sh inception_v3 4000
 guess.sh ../tactileFinderClient/src/images/doodle.jpg
 
 docker run -i -t cegonzalv/tactilefindertensorflow:latest
+
+//git push on ubuntu machine
+git config --local --unset credential.helper
+
+
+if.garcia
+RealMadrid13
+172.24.41.171
