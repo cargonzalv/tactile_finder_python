@@ -6,7 +6,6 @@ python ./examples/image_retraining/retrain.py \
 --output_graph=/tf_files/retrained_graph.pb \
 --output_labels=/tf_files/retrained_labels.txt \
 --image_dir=/tf_files/tactile_photos \
---learning_rate=0.5 \
 --saved_model_dir=/tf_files/saved_models/$1 \
 --architecture=$1
 
@@ -21,7 +20,7 @@ echo $out
 
 tensorflowjs_converter \
     --input_format=tf_saved_model \
-    --output_node_names=final_result \
+    --output_node_names=$out \
     --saved_model_tags=serve \
     /tf_files/saved_models/$1 \
     /tf_files/web_model/$1
