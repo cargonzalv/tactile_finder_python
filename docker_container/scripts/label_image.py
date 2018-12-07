@@ -76,7 +76,7 @@ if __name__ == "__main__":
   input_mean = 128
   input_std = 128
   input_layer = "input"
-  output_layer = "final_result"
+  output_layer = "input_1 "
 
   parser = argparse.ArgumentParser()
   parser.add_argument("--image", help="image to be processed")
