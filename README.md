@@ -52,12 +52,9 @@ To guess an entire directory
 
 ## Example of result
 ```
-# ./guess.sh /synced/tensor-lib/moto-classifier/ /synced/imagesToTest/moto21.jpg
+# ./guess.sh /path-to-file/moto21.jpg
 Positive (score = 0.88331)
 Negative (score = 0.11669)
 ```
-
-Use an absolute file path for classifier and images because the script dos not support relative path (volume mounting)
-
 
 
