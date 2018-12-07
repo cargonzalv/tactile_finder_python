@@ -17,38 +17,37 @@ The `scripts` directory contains helpers for the codelab. Some of these come fro
 
 ## Put the training images
 
-- Go to tf_files/tactile_photos. There needs to be a folder with each category of the training model. We did it with a "Positive" folder and a "Negative" one.
-
-You just need to make a "classifier" directory with a directory "data" inside it with all your images
+You just need to add your images to /docker_container/tf_files/tactile_photos, separating them in different folders for every category
+you want to train.
 For example
 ```
- [any_path]/my_own_classifier/
- [any_path]/my_own_classifier/data
- [any_path]/my_own_classifier/data/car
- [any_path]/my_own_classifier/data/moto
- [any_path]/my_own_classifier/data/bus
-```
- and then put your image on it. 
- This "classifier" directory will have your samples but also trained classifier after execution of "train.sh". 
+ docker/container/tf_files/tactile_photos/Positive
+ docker/container/tf_files/tactile_photos/Negative
+ docker/container/tf_files/tactile_photos/Neutral
+
+``` 
+ This "tf_files" directory will have your samples but also trained classifier after execution of "train.sh". 
 
 ## Train process
  
 Just type
 ```
- ./train.sh [any_path]/my_own_classifier
+ ./train.sh [training-steps]
 ``` 
-And it will do anything for you !
+where the training-steps parameter is how much precision you want from the model! A recommended number is 4000.
+
+This will train any classification for you !
 
 ## Guess process
 
 Just type for a single guess
 ```
- ./guess.sh [any_path]/my_own_classifier /yourfile.jpg
+ ./guess.sh [path-to-your-file]/yourfile.jpg
 ```
 
 To guess an entire directory
 ```
-./guessDir.sh [any_path]/classifier [any_path]/srcDir [any_path]/destDir
+./guessDir.sh [any_path]/srcDir [any_path]/destDir
 ```
 
 ## Example of result
